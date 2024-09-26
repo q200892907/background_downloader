@@ -578,20 +578,19 @@ final class DesktopDownloader extends BaseDownloader {
     client.findProxy = proxy.isNotEmpty
         ? (_) => 'PROXY ${_proxy['address']}:${_proxy['port']}'
         : null;
-    client.badCertificateCallback =
-        bypassTLSCertificateValidation && !kReleaseMode
-            ? (X509Certificate cert, String host, int port) => true
-            : null;
+    client.badCertificateCallback = bypassTLSCertificateValidation
+        ? (X509Certificate cert, String host, int port) => true
+        : null;
     httpClient = IOClient(client);
     if (bypassTLSCertificateValidation) {
-      if (kReleaseMode) {
-        throw ArgumentError(
-            'You cannot bypass certificate validation in release mode');
-      } else {
-        _log.warning(
-            'TLS certificate validation is bypassed. This is insecure and cannot be '
-            'done in release mode');
-      }
+      // if (kReleaseMode) {
+      //   throw ArgumentError(
+      //       'You cannot bypass certificate validation in release mode');
+      // } else {
+      _log.warning(
+          'TLS certificate validation is bypassed. This is insecure and cannot be '
+          'done in release mode');
+      // }
     }
     _log.finest(
         'Using HTTP client with requestTimeout $_requestTimeout, proxy $_proxy and TLSCertificateBypass = $bypassTLSCertificateValidation');
